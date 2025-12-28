@@ -5,135 +5,189 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Storybook</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #f5f5f5;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       color: #222;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      padding: 0;
     }
     header {
       text-align: center;
-      padding: 1rem;
-      background: #ffffff;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       position: sticky;
       top: 0;
-      z-index: 10;
+      z-index: 100;
+    }
+    h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .subtitle {
+      margin: 0;
+      color: #666;
+      font-size: 1rem;
     }
     .container {
-      max-width: 900px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 1rem;
+      padding: 2rem 1rem;
       flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
     .story-image {
       width: 100%;
+      max-width: 800px;
       height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-      background: #ddd;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      background: #fff;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .story-image:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.25);
     }
     .page-info {
       text-align: center;
-      margin-top: 0.5rem;
-      font-size: 0.95rem;
+      margin: 1.5rem 0;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #333;
     }
     .nav-buttons {
       display: flex;
       justify-content: center;
-      gap: 0.75rem;
-      margin-top: 1rem;
+      gap: 1rem;
+      margin: 2rem 0;
       flex-wrap: wrap;
     }
     button {
-      padding: 0.5rem 1rem;
-      border-radius: 999px;
-      border: 1px solid #ccc;
-      background: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 50px;
+      border: none;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
     }
     button:disabled {
       opacity: 0.5;
       cursor: default;
+      transform: none;
+      box-shadow: none;
     }
     .thumbs {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      gap: 0.5rem;
-      margin-top: 1.5rem;
-    }
-    .thumbs img {
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 0.75rem;
+      margin-top: 3rem;
+      padding: 1rem;
+      max-width: 800px;
       width: 100%;
-      height: auto;
-      border-radius: 6px;
+    }
+    .thumb {
+      width: 100%;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
       cursor: pointer;
-      opacity: 0.7;
-      transition: transform 0.2s, opacity 0.2s, box-shadow 0.2s;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+      border: 3px solid transparent;
     }
-    .thumbs img.active {
+    .thumb.active {
       opacity: 1;
-      box-shadow: 0 0 0 2px #0070f3;
-      transform: translateY(-2px);
+      border-color: #667eea;
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
     }
-    .thumbs img:hover {
-      opacity: 1;
+    .thumb:hover {
+      opacity: 0.9;
+      transform: scale(1.02);
     }
-    @media (max-width: 600px) {
+    @media (max-width: 768px) {
       .container {
-        padding: 0.75rem;
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      .nav-buttons {
+        gap: 0.5rem;
+      }
+      button {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+      .thumbs {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 0.5rem;
+      }
+    }
+    @media (max-width: 480px) {
+      .thumbs {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>My Storybook</h1>
-    <p>Use the buttons or arrow keys to flip pages.</p>
+    <h1>📖 My Storybook</h1>
+    <p class="subtitle">Use ← → arrow keys or buttons to flip through pages</p>
   </header>
 
   <div class="container">
-    <img id="mainImage" class="story-image" src="images/page1.jpg" alt="Story page 1">
+    <img id="mainImage" class="story-image" src="page0.png" alt="Story page 1">
 
     <div class="page-info">
       <span id="pageText">Page 1 of 10</span>
     </div>
 
     <div class="nav-buttons">
-      <button id="prevBtn">◀ Previous</button>
+      <button id="prevBtn" disabled>◀ Previous</button>
       <button id="nextBtn">Next ▶</button>
     </div>
 
     <div class="thumbs" id="thumbs">
-      <!-- Thumbnails: update filenames to match your images -->
-      <img src="images/page1.jpg" alt="Page 1" data-index="0" class="active">
-      <img src="images/page2.jpg" alt="Page 2" data-index="1">
-      <img src="images/page3.jpg" alt="Page 3" data-index="2">
-      <img src="images/page4.jpg" alt="Page 4" data-index="3">
-      <img src="images/page5.jpg" alt="Page 5" data-index="4">
-      <img src="images/page6.jpg" alt="Page 6" data-index="5">
-      <img src="images/page7.jpg" alt="Page 7" data-index="6">
-      <img src="images/page8.jpg" alt="Page 8" data-index="7">
-      <img src="images/page9.jpg" alt="Page 9" data-index="8">
-      <img src="images/page10.jpg" alt="Page 10" data-index="9">
+      <img src="page0.png" alt="Page 1" class="thumb active" data-index="0">
+      <img src="page1.png" alt="Page 2" class="thumb" data-index="1">
+      <img src="page2.png" alt="Page 3" class="thumb" data-index="2">
+      <img src="page3.png" alt="Page 4" class="thumb" data-index="3">
+      <img src="page4.png" alt="Page 5" class="thumb" data-index="4">
+      <img src="page5.png" alt="Page 6" class="thumb" data-index="5">
+      <img src="page6.png" alt="Page 7" class="thumb" data-index="6">
+      <img src="page7.png" alt="Page 8" class="thumb" data-index="7">
+      <img src="page8.png" alt="Page 9" class="thumb" data-index="8">
+      <img src="page9.png" alt="Page 10" class="thumb" data-index="9">
     </div>
   </div>
 
   <script>
     const images = [
-      "images/page1.jpg",
-      "images/page2.jpg",
-      "images/page3.jpg",
-      "images/page4.jpg",
-      "images/page5.jpg",
-      "images/page6.jpg",
-      "images/page7.jpg",
-      "images/page8.jpg",
-      "images/page9.jpg",
-      "images/page10.jpg"
+      "page0.png", "page1.png", "page2.png", "page3.png", "page4.png",
+      "page5.png", "page6.png", "page7.png", "page8.png", "page9.png"
     ];
 
     let currentIndex = 0;
@@ -141,17 +195,19 @@
     const pageText = document.getElementById("pageText");
     const prevBtn = document.getElementById("prevBtn");
     const nextBtn = document.getElementById("nextBtn");
-    const thumbs = document.querySelectorAll("#thumbs img");
+    const thumbs = document.querySelectorAll(".thumb");
 
     function updateView(index) {
       currentIndex = index;
       mainImage.src = images[currentIndex];
-      mainImage.alt = "Story page " + (currentIndex + 1);
-      pageText.textContent = "Page " + (currentIndex + 1) + " of " + images.length;
+      mainImage.alt = `Story page ${currentIndex + 1}`;
+      pageText.textContent = `Page ${currentIndex + 1} of ${images.length}`;
+      
       prevBtn.disabled = currentIndex === 0;
       nextBtn.disabled = currentIndex === images.length - 1;
-      thumbs.forEach((img, i) => {
-        img.classList.toggle("active", i === currentIndex);
+      
+      thumbs.forEach((thumb, i) => {
+        thumb.classList.toggle("active", i === currentIndex);
       });
     }
 
@@ -163,17 +219,17 @@
       if (currentIndex < images.length - 1) updateView(currentIndex + 1);
     });
 
-    thumbs.forEach((img) => {
-      img.addEventListener("click", () => {
-        const i = parseInt(img.dataset.index, 10);
-        updateView(i);
+    thumbs.forEach((thumb) => {
+      thumb.addEventListener("click", () => {
+        const index = parseInt(thumb.dataset.index, 10);
+        updateView(index);
       });
     });
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") {
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
         if (currentIndex < images.length - 1) updateView(currentIndex + 1);
-      } else if (e.key === "ArrowLeft") {
+      } else if (e.key === "ArrowLeft" || e.key === "ArrowDown") {
         if (currentIndex > 0) updateView(currentIndex - 1);
       }
     });
